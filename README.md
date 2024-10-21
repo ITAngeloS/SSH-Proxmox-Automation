@@ -1,8 +1,7 @@
 🛠️ Proxmox SSH Configuration Script for Ansible
-This script configures SSH on multiple Proxmox containers, allowing secure, passwordless access via public keys. 
-It's designed to simplify the connection process for Ansible by modifying the SSH configuration to use public key authentication while disabling root login.
+This script configures SSH on multiple Proxmox containers, allowing secure, passwordless access via public keys. It's designed to simplify the connection process for Ansible by modifying the SSH configuration to use public key authentication while disabling root login.
 
-📝 How It Works:
+📝 How It Works
 💻 Request IP Input: The script prompts the user to enter a list of IP addresses corresponding to the Proxmox containers.
 
 🔐 Copy Public Key: For each specified container, the script copies the public key from the control node to the container, enabling passwordless SSH access.
@@ -14,27 +13,68 @@ It's designed to simplify the connection process for Ansible by modifying the SS
 🚫 Disable root login over SSH for added security.
 🔄 Repeat for Each Container: The above process is repeated for every container IP entered by the user.
 
-📜 Script Overview:
+📜 Script Overview
+bash
+Copy code
 #!/bin/bash
 
 # Function to modify SSH configuration on remote hosts
 modify_ssh_config() {
     local host_ip=$1
-    echo "Modificando il file sshd_config su $host_ip..."
+    echo "Modifying sshd_config on $host_ip..."
     ssh "$host_ip" "sed -i 's/^#PubkeyAuthentication yes/PubkeyAuthentication yes/' /etc/ssh/sshd_config"
     ssh "$host_ip" "sed -i 's/^#AuthorizedKeysFile/AuthorizedKeysFile/' /etc/ssh/sshd_config"
     ssh "$host_ip" "sed -i 's/^PermitRootLogin yes/#PermitRootLogin yes/' /etc/ssh/sshd_config"
-                echo "File sshd_config modificato su $host_ip."
-    
+    echo "sshd_config modified on $host_ip."
 }
-# Ask for remote IP address prompt
-read -p "Inserisci gli indirizzi IP degli host remoti (separati da spazio): " host_ips
 
-# For every host
+# Ask for remote IP addresses
+read -p "Enter the IP addresses of the remote hosts (separated by space): " host_ips
+
+# Loop through each IP address
 for host_ip in $host_ips; do
-    copy_public_key "$host_ip"
-    modify_ssh_config "$host_ip"
+    copy_public_key "$host_ip"  # Copy the public key to the remote host
+    modify_ssh_config "$host_ip"  # Modify the SSH configuration on the remote host
 done
+🚀 Step-by-Step Breakdown
+1. 💻 Request IP Input
+The script starts by prompting you to enter the IP addresses of the Proxmox containers you want to configure. These IPs are separated by spaces and will be processed one by one.
 
+bash
+Copy code
+read -p "Enter the IP addresses of the remote hosts (separated by space): " host_ips
+2. 🔐 Copy Public Key
+After receiving the IPs, the script calls a function (assumed to be copy_public_key "$host_ip") that transfers your public SSH key to each remote container. This allows passwordless SSH access, essential for Ansible operations.
 
+3. ⚙️ Modify SSH Configuration
+The modify_ssh_config function takes care of modifying the SSH configuration on each container. Specifically:
 
+✅ Enables public key authentication by uncommenting the relevant line in the sshd_config file:
+
+bash
+Copy code
+ssh "$host_ip" "sed -i 's/^#PubkeyAuthentication yes/PubkeyAuthentication yes/' /etc/ssh/sshd_config"
+📂 Ensures the SSH server uses the AuthorizedKeysFile to locate authorized public keys:
+
+bash
+Copy code
+ssh "$host_ip" "sed -i 's/^#AuthorizedKeysFile/AuthorizedKeysFile/' /etc/ssh/sshd_config"
+🚫 Disables root login via SSH to enhance security:
+
+bash
+Copy code
+ssh "$host_ip" "sed -i 's/^PermitRootLogin yes/#PermitRootLogin yes/' /etc/ssh/sshd_config"
+4. 🔄 Repeat for Each Container
+The script loops through the list of IPs, applying the key transfer and configuration changes to each container in turn.
+
+⚡ Example Usage
+Clone the script to your Proxmox control node.
+Run the script in the terminal:
+bash
+Copy code
+./your_script.sh
+When prompted, enter the IP addresses of the containers separated by spaces (e.g., 192.168.1.101 192.168.1.102).
+The script will automatically configure each container for Ansible access.
+🛡️ Security Considerations
+Disabling root login increases security, ensuring that access to the root account over SSH is blocked.
+Ensure that your public/private key pair is properly secured and that only authorized users have access to the private key.
