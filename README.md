@@ -1,8 +1,3 @@
-<p align=”center”>
-
-<img width=”200" height=”200" src=”https://user-images.githubusercontent.com/75753187/123358567-aac7b900-d539-11eb-8275-0b380264bb4c.png" alt=”my banner”>
-
-</p>
 🛠️ Proxmox SSH Configuration Script for Ansible
 This script configures SSH on multiple Proxmox containers, allowing secure, passwordless access via public keys. 
 It's designed to simplify the connection process for Ansible by modifying the SSH configuration to use public key authentication while disabling root login.
