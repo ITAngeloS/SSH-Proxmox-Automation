@@ -16,7 +16,7 @@ This script configures SSH on multiple Proxmox containers, allowing secure, pass
 📜 Script Overview:
 #!/bin/bash
 
-# Function to modify SSH configuration on remote hosts
+Function to modify SSH configuration on remote hosts
 modify_ssh_config() {
     local host_ip=$1
     echo "Modifying sshd_config on $host_ip..."
@@ -26,10 +26,10 @@ modify_ssh_config() {
     echo "sshd_config modified on $host_ip."
 }
 
-# Ask for remote IP addresses
+Ask for remote IP addresses
 read -p "Enter the IP addresses of the remote hosts (separated by space): " host_ips
 
-# Loop through each IP address
+Loop through each IP address
 for host_ip in $host_ips; do
     copy_public_key "$host_ip"  # Copy the public key to the remote host
     modify_ssh_config "$host_ip"  # Modify the SSH configuration on the remote host
