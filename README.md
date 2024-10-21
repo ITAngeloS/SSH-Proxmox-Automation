@@ -17,7 +17,7 @@ This script configures SSH on multiple Proxmox containers, allowing secure, pass
 
 <pre>
   <code class="language-java">
-    #!/bin/bash
+#!/bin/bash
 
 # Copy the public key to host
 copy_public_key() {
