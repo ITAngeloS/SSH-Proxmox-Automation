@@ -25,7 +25,17 @@ modify_ssh_config() {
     ssh "$host_ip" "sed -i 's/^PermitRootLogin yes/#PermitRootLogin yes/' /etc/ssh/sshd_config"
     echo "sshd_config modified on $host_ip."
 }
-
+<pre>
+  <code class="language-java">
+    public class MyFirstClass
+    {
+        public static void main(String ... args)
+        {
+            System.out.println("Hello, world!");
+        }
+    }
+  </code>
+</pre>
 Ask for remote IP addresses
 read -p "Enter the IP addresses of the remote hosts (separated by space): " host_ips
 
