@@ -40,12 +40,34 @@ done
 🚀 Step-by-Step Breakdown
 1. 💻 Request IP Input
 The script starts by prompting you to enter the IP addresses of the Proxmox containers you want to configure. These IPs are separated by spaces and will be processed one by one.
-"read -p "Enter the IP addresses of the remote hosts (separated by space): " host_ips"
 
-````
-```
-Look! You can see my backticks.
-```
-````
+bash
+Copy code
+read -p "Enter the IP addresses of the remote hosts (separated by space): " host_ips
+2. 🔐 Copy Public Key
+After receiving the IPs, the script calls a function (assumed to be copy_public_key "$host_ip") that transfers your public SSH key to each remote container. This allows passwordless SSH access, essential for Ansible operations.
+
+3. ⚙️ Modify SSH Configuration
+The modify_ssh_config function takes care of modifying the SSH configuration on each container. Specifically:
+
+✅ Enables public key authentication by uncommenting the relevant line in the sshd_config file:
+
+bash
+Copy code
+ssh "$host_ip" "sed -i 's/^#PubkeyAuthentication yes/PubkeyAuthentication yes/' /etc/ssh/sshd_config"
+📂 Ensures the SSH server uses the AuthorizedKeysFile to locate authorized public keys:
+
+bash
+Copy code
+ssh "$host_ip" "sed -i 's/^#AuthorizedKeysFile/AuthorizedKeysFile/' /etc/ssh/sshd_config"
+🚫 Disables root login via SSH to enhance security:
+
+bash
+Copy code
+ssh "$host_ip" "sed -i 's/^PermitRootLogin yes/#PermitRootLogin yes/' /etc/ssh/sshd_config"
+4. 🔄 Repeat for Each Container
+The script loops through the list of IPs, applying the key transfer and configuration changes to each container in turn.
+
+
 
 
