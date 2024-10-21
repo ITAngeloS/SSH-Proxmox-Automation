@@ -14,36 +14,40 @@ This script configures SSH on multiple Proxmox containers, allowing secure, pass
 🔄 Repeat for Each Container: The above process is repeated for every container IP entered by the user.
 
 📜 Script Overview:
-#!/bin/bash
 
-Function to modify SSH configuration on remote hosts
+<pre>
+  <code class="language-java">
+    #!/bin/bash
+
+# Copy the public key to host
+copy_public_key() {
+    local host_ip=$1
+    echo "Copiando la chiave pubblica su $host_ip..."
+    ssh-copy-id -i ~/.ssh/ansible.pub "$host_ip"
+    echo "Chiave pubblica copiata su $host_ip."
+}
+
+# Modify /etc/ssh/sshd_config
 modify_ssh_config() {
     local host_ip=$1
-    echo "Modifying sshd_config on $host_ip..."
+    echo "Modificando il file sshd_config su $host_ip..."
     ssh "$host_ip" "sed -i 's/^#PubkeyAuthentication yes/PubkeyAuthentication yes/' /etc/ssh/sshd_config"
     ssh "$host_ip" "sed -i 's/^#AuthorizedKeysFile/AuthorizedKeysFile/' /etc/ssh/sshd_config"
     ssh "$host_ip" "sed -i 's/^PermitRootLogin yes/#PermitRootLogin yes/' /etc/ssh/sshd_config"
-    echo "sshd_config modified on $host_ip."
+                echo "File sshd_config modificato su $host_ip."
+    
 }
-<pre>
-  <code class="language-java">
-    public class MyFirstClass
-    {
-        public static void main(String ... args)
-        {
-            System.out.println("Hello, world!");
-        }
-    }
+
+# Ask for remote IP address prompt
+read -p "Inserisci gli indirizzi IP degli host remoti (separati da spazio): " host_ips
+
+# For every host
+for host_ip in $host_ips; do
+    copy_public_key "$host_ip"
+    modify_ssh_config "$host_ip"
+done
   </code>
 </pre>
-Ask for remote IP addresses
-read -p "Enter the IP addresses of the remote hosts (separated by space): " host_ips
-
-Loop through each IP address
-for host_ip in $host_ips; do
-    copy_public_key "$host_ip"  # Copy the public key to the remote host
-    modify_ssh_config "$host_ip"  # Modify the SSH configuration on the remote host
-done
 
 🛡️ Security Considerations:
 Disabling root login increases security, ensuring that access to the root account over SSH is blocked.
