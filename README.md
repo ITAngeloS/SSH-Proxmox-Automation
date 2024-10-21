@@ -18,34 +18,33 @@ This script configures SSH on multiple Proxmox containers, allowing secure, pass
 <pre>
   <code class="language-java">
 #!/bin/bash
-
 # Copy the public key to host
 copy_public_key() {
     local host_ip=$1
-    echo "Copiando la chiave pubblica su $host_ip..."
+    echo "Copying the public key to $host_ip..."
     ssh-copy-id -i ~/.ssh/ansible.pub "$host_ip"
-    echo "Chiave pubblica copiata su $host_ip."
+    echo "Public key copied to $host_ip."
 }
 
 # Modify /etc/ssh/sshd_config
 modify_ssh_config() {
     local host_ip=$1
-    echo "Modificando il file sshd_config su $host_ip..."
+    echo "Modifying sshd_config file on $host_ip..."
     ssh "$host_ip" "sed -i 's/^#PubkeyAuthentication yes/PubkeyAuthentication yes/' /etc/ssh/sshd_config"
     ssh "$host_ip" "sed -i 's/^#AuthorizedKeysFile/AuthorizedKeysFile/' /etc/ssh/sshd_config"
     ssh "$host_ip" "sed -i 's/^PermitRootLogin yes/#PermitRootLogin yes/' /etc/ssh/sshd_config"
-                echo "File sshd_config modificato su $host_ip."
-    
+    echo "sshd_config file modified on $host_ip."
 }
 
 # Ask for remote IP address prompt
-read -p "Inserisci gli indirizzi IP degli host remoti (separati da spazio): " host_ips
+read -p "Enter the IP addresses of the remote hosts (separated by space): " host_ips
 
 # For every host
 for host_ip in $host_ips; do
     copy_public_key "$host_ip"
     modify_ssh_config "$host_ip"
 done
+
   </code>
 </pre>
 
