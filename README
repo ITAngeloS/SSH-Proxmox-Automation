@@ -1,12 +1,17 @@
 # 🛠️ SSH - Ansible Proxmox Automation
-# 🧰 How the complete script works
-Requesting IP input: The user enters a list of IPs of the Proxmox containers.
-Copying the public key: The public key is copied to each specified container.
-Changing SSH configurations: Each container is configured to:
-Enable authentication via public key.
-Configure the authorised key file.
-Disable direct SSH login of the root user.
-Repeat for each IP: The process is repeated for each IP provided by the user
+# Script di Configurazione SSH per Container Proxmox
+
+Questo script consente di configurare l'accesso SSH sui container Proxmox, permettendo ad Ansible di collegarsi in modo sicuro tramite chiavi pubbliche, disabilitando il login SSH root diretto. 
+
+## Funzionamento dello script
+
+### 1. Richiesta dell'input IP
+
+L'utente inserisce una lista di IP dei container remoti (Proxmox) a cui desidera applicare la configurazione. Gli IP devono essere separati da uno spazio.
+
+```bash
+Inserisci gli indirizzi IP degli host remoti (separati da spazio): 192.168.1.101 192.168.1.102
+
 
 Translated with DeepL.com (free version)
 
