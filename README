@@ -1,4 +1,15 @@
 # 🛠️ SSH - Ansible Proxmox Automation
+# 🧰 How the complete script works
+Requesting IP input: The user enters a list of IPs of the Proxmox containers.
+Copying the public key: The public key is copied to each specified container.
+Changing SSH configurations: Each container is configured to:
+Enable authentication via public key.
+Configure the authorised key file.
+Disable direct SSH login of the root user.
+Repeat for each IP: The process is repeated for each IP provided by the user
+
+Translated with DeepL.com (free version)
+
 
 This is the script made:
 
@@ -11,7 +22,6 @@ modify_ssh_config() {
                 echo "File sshd_config modificato su $host_ip."
     
 }
-
 # Ask for remote IP address prompt
 read -p "Inserisci gli indirizzi IP degli host remoti (separati da spazio): " host_ips
 
