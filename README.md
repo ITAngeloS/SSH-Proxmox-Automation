@@ -1,7 +1,7 @@
 # 🛠️ Proxmox SSH Configuration Script for Ansible
 This script configures SSH on multiple Proxmox containers, allowing secure, passwordless access via public keys. It's designed to simplify the connection process for Ansible by modifying the SSH configuration to use public key authentication while disabling root login.
 
-📝 How It Works
+📝 How It Works <br>
 💻 Request IP Input: The script prompts the user to enter a list of IP addresses corresponding to the Proxmox containers.
 
 🔐 Copy Public Key: For each specified container, the script copies the public key from the control node to the container, enabling passwordless SSH access.
